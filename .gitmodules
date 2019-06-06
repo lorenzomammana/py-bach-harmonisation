@@ -1,0 +1,3 @@
+[submodule "allan-harmony"]
+	path = allan-harmony
+	url = https://github.com/johndpope/allan-harmony.git
