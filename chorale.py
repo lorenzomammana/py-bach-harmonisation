@@ -1,4 +1,5 @@
 import re
+from copy import deepcopy
 
 
 class Chorale:
@@ -162,7 +163,7 @@ class Chorale:
 
                     intervals[i - 2] = str(self.notepitch(row[i]) - bass)
                     if row[i][0] == "-":
-                            intervals[i - 2] = "-" + intervals[i - 2]
+                        intervals[i - 2] = "-" + intervals[i - 2]
 
             row.append(":".join(intervals))
             lines.append(row)
@@ -252,3 +253,69 @@ class Chorale:
             linesB.append(row)
 
         return linesB
+
+    def unpackchordsymbols(self, lines):
+        for i in range(0, len(lines)):
+            row = deepcopy(lines[i])
+
+            if len(row) == 7 and ":" in row[6] and "/" in row[6]:
+                [soprano, row[3], row[4], row[5]] = "/".split(row[6])
+            elif len(row) == 7 and ":" in row[6]:
+                if row[2] != "":
+                    intervals = row[6].split(":")
+
+                    soprano = self.notepitch(row[2])
+
+                    intervals[0] = intervals[0].lstrip("-")
+
+                    for j in range(3, 6):
+                        if not intervals[j - 2].lstrip("-").isdigit():
+                            row[j] = intervals[j - 2]
+                        else:
+                            prefix = ""
+
+                            if "-" in intervals[j - 2]:
+                                prefix = "-"
+                                intervals[j - 2] = intervals[j - 2].replace("-", "")
+
+                            row[j] = prefix + self.notesymbol(soprano - (int(intervals[0]) - int(intervals[j - 2])))
+
+            lines[i] = deepcopy(row)
+
+        return lines
+
+    def tidychorale(self, lines):
+        for i in range(0, len(lines)):
+            row = ["", "", "", "", "", "", "", ""]
+            ev = deepcopy(row)
+
+            for k in range(0, len(lines[i])):
+                row[k] = lines[i][k]
+
+            # for j in range(len(row), 7, -1):
+            #     print(j)
+            #     row[j] = ""
+
+            for j in range(0, 7):
+                if row[j] != "" and row[j][0] == "-":
+                    row[j] = ""
+                else:
+                    ev[j] = row[j]
+
+                row[j] = row[j].replace("_", " ")
+
+            lines[i] = deepcopy(row)
+            print(lines[i])
+
+        return lines
+
+    def writechorale(self, filename, headers, lines):
+        f = open(filename, 'w+')
+
+        [choralname, stimmen, tonart, takt, tempo, message] = headers
+
+        for i in range(0, len(lines)):
+            f.write("\t".join(lines[i]) + "\t\t\n")
+
+        f.close()
+
