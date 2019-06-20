@@ -1,6 +1,7 @@
 from chorale import Chorale
 import sys
 from midiutil.MidiFile import *
+import math
 
 
 def addnote(start, note, duration, newbar, channel):
@@ -12,8 +13,8 @@ def addnote(start, note, duration, newbar, channel):
     if newbar and stressbar:
         volume = 96
 
-    # print("0 " + str(channel) + " " + str(choraleManager.notepitch(note)) +
-    #      " " + str(start) + " " + str(duration) + " " + str(volume))
+    # print(str(channel) + " " + str(choraleManager.notepitch(note)) +
+    #     " " + str(start) + " " + str(duration) + " " + str(volume))
     input_midi.addNote(0, channel, choraleManager.notepitch(note), start, duration, volume)
 
 
@@ -44,11 +45,11 @@ if __name__ == '__main__':
     denominator = int(takt.split("/")[1])
 
     print("Time : " + takt)
-    input_midi.addTimeSignature(0, 0, numerator, denominator, 24)
+    input_midi.addTimeSignature(0, 0, numerator, int(math.log2(denominator)), 24)
     keypitch = 0
 
     if transpose:
-        keypitch = choraleManager.key2pitch(tonart)
+        keypitch = - choraleManager.key2pitch(tonart)
 
     stressbar = False
 
@@ -58,6 +59,7 @@ if __name__ == '__main__':
 
     beat = -1/16
 
+    f.readline()  # read blank line
     f.readline()  # read blank line
     lines = f.readlines()
     f.close()
@@ -74,6 +76,9 @@ if __name__ == '__main__':
             for i in range(toppart, 4):
                 if newnotes[i] != "" and newnotes[i][0] != "-":
                     duration = beat - started[i]
+                    if beat == 0:
+                        duration = 1 / denominator
+                    addnote(started[i] * denominator, current[i], duration * denominator, newbar[i], i)
                     current[i] = newnotes[i]
                     started[i] = beat
 
@@ -81,11 +86,6 @@ if __name__ == '__main__':
                         newbar[i] = True
                     else:
                         newbar[i] = False
-
-                    if beat == 0:
-                        duration = 1 / denominator
-
-                    addnote(started[i] * numerator, current[i], duration * numerator, newbar[i], i)
 
     with open(outputfile, "wb") as output_file:
         input_midi.writeFile(output_file)

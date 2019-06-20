@@ -314,6 +314,7 @@ class Chorale:
         [choralname, stimmen, tonart, takt, tempo, message] = headers
 
         self.writeheaders(f, choralname, stimmen, tonart, takt, tempo, message)
+        f.write("\n")
         for i in range(0, len(lines)):
             f.write("\t".join(lines[i]) + "\t\t\n")
 
