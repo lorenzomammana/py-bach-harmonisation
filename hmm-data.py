@@ -1,11 +1,3 @@
-# if (#ARGV != 4)
-# {
-# 	die "syntax: hmm-data.pl MODELNAME HIDDEN VISIBLE TRAIN TEST")
-# }
-#
-# my choraledir = ENV{HARMONYDIR})
-# my modeldir = ENV{HARMONYOUTPUTDIR})
-
 import sys
 from chorale import Chorale
 import os
