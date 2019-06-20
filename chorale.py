@@ -33,14 +33,14 @@ class Chorale:
              "P:P:P:P", "P;P;P;P", "P,P,P,P", "P,P,P,P", "P,P,P,P", "P,P,P,P"]
 
     # write out the header lines of a chorale data file
-    def writeheaders(self, choralname, stimmen, tonart, takt, tempo, message):
-        print(choralname)
-        print(stimmen)
-        print(tonart)
-        print(takt)
-        print(tempo)
-        print(message)
-        print(self.columnheadings)
+    def writeheaders(self, file, choralname, stimmen, tonart, takt, tempo, message):
+        file.write("Choralname = " + choralname + "\n")
+        file.write("Anzahl Stimmen = " + stimmen + "\n")
+        file.write("Tonart = " + tonart + "\n")
+        file.write("Takt = " + takt + "\n")
+        file.write("Tempo = " + tempo + "\n")
+        file.write(message + "\n")
+        file.write(self.columnheadings + "\n")
 
     def readheaders(self, file):
         choralname = ""
@@ -313,6 +313,7 @@ class Chorale:
 
         [choralname, stimmen, tonart, takt, tempo, message] = headers
 
+        self.writeheaders(f, choralname, stimmen, tonart, takt, tempo, message)
         for i in range(0, len(lines)):
             f.write("\t".join(lines[i]) + "\t\t\n")
 
