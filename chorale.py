@@ -305,7 +305,6 @@ class Chorale:
                 row[j] = row[j].replace("_", " ")
 
             lines[i] = deepcopy(row)
-            print(lines[i])
 
         return lines
 
