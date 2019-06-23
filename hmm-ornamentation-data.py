@@ -21,17 +21,13 @@ harmonydir = ""
 modeldir = ""
 
 datasetdir = harmonydir + "datasets/"
-# name = sys.argv[1]
-# prevstage = sys.argv[2]
-# prevoutputname = sys.argv[3]
-# train = sys.argv[4]
-# test = sys.argv[5]
+name = sys.argv[1]
+prevstage = sys.argv[2]
+prevoutputname = sys.argv[3]
+train = sys.argv[4]
+test = sys.argv[5]
 
-name = "ornamentation-dur"
-prevstage = "chords-dur"
-prevoutputname = "viterbi"
-train = "train_dur"
-test = "test_dur"
+#  perl -I chorale-perl chorale-perl/hmm-ornamentation-data.pl ornamentation-dur chords-dur viterbi train_dur test_dur
 
 modeldir += "model-" + name + "/"
 prevstagedir = "model-" + prevstage + "/" + prevoutputname + "-results/"
@@ -42,8 +38,6 @@ if not os.path.exists(modeldir):
     os.mkdir(modeldir + "input-test")
     os.mkdir(modeldir + "viterbi")
     os.mkdir(modeldir + "sampled")
-
-#  perl -I chorale-perl chorale-perl/hmm-data.pl chords-dur chordtransposed/HARMONIK SOPRAN train_dur test_dur
 
 hiddensymbols = []
 hiddensymbolseen = {}
