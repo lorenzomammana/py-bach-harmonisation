@@ -75,7 +75,7 @@ class Chorale:
     # convert a note representation into a numerical value
     def notepitch(self, note):
 
-        if "P" in note:
+        if "P" in note or "END" in note:
             return -1
 
         match = re.match('^\-*([ABCDEFGH#b]+)[ _]*([-\d]+)', note)
@@ -123,7 +123,7 @@ class Chorale:
         keypitch = self.key2pitch(tonart)
 
         # event we're 'in' (so nothing to start with)
-        within = self.BEFORE
+        within = deepcopy(self.BEFORE)
 
         lines = []
 
@@ -170,6 +170,8 @@ class Chorale:
 
             cont += 1
 
+            # print(row)
+
         f.close()
 
         if "/" not in lines[0][1]:
@@ -178,7 +180,7 @@ class Chorale:
 
             for i in range(0, len(lines)):
 
-                row = lines[i]
+                row = deepcopy(lines[i])
                 if i % 4 == 0:
                     beat += 1
 
@@ -193,7 +195,7 @@ class Chorale:
                 if beat > maxbeat:
                     maxbeat = beat
 
-                lines[i] = row
+                lines[i] = deepcopy(row)
 
             for i in range(0, len(lines)):
                 lines[i][1] = lines[i][1] + "/" + str(maxbeat)
