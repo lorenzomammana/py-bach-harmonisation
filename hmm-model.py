@@ -4,6 +4,8 @@ import sys
 from os import listdir
 from os.path import isfile, join
 
+# TODO viterbi
+
 # name = sys.argv[1]
 name = "chords-dur"
 

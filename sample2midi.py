@@ -2,6 +2,8 @@ from midiutil.MidiFile import *
 import pickle
 from chorale import Chorale
 
+# TODO testing
+
 with open('model-chords-dur/DICTIONARY.pkl', 'rb') as f:
     dictionary = pickle.load(f)
 
