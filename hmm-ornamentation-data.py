@@ -3,6 +3,20 @@ import sys
 import os
 from copy import deepcopy
 
+
+def readentries(filename):
+    entries = []
+
+    f = open(filename, "r")
+
+    for chor in f:
+        entries.append("bch" + ('%03d' % int(chor.split("\n")[0])) + ".txt")
+
+    f.close()
+
+    return entries
+
+
 harmonydir = ""
 modeldir = ""
 
@@ -72,6 +86,8 @@ if __name__ == '__main__':
             outputfile = open(filename, "w+")
 
         for i in range(0, len(lines), 4):
+            h = []
+            v = ["0"]
 
             if i + 4 < len(lines):
                 c = lines[i]
@@ -79,13 +95,10 @@ if __name__ == '__main__':
                 c2 = lines[i + 2]
                 c3 = lines[i + 3]
 
-                if c3[2] == "END":
+                if c3[2] != "END":
                     c4 = lines[i + 4]
                 else:
                     c4 = deepcopy(c)
-
-                h = []
-                v = ["0"]
 
                 for j in range(3, 6):
                     h.append("0," + str(choraleManager.notepitch(c1[j]) - choraleManager.notepitch(c[j])) + ","
@@ -98,8 +111,9 @@ if __name__ == '__main__':
                 visiblesymbol = "/".join(v)
             else:
                 hiddensymbol = "0,0,0,0/0,0,0,0/0,0,0,0"
-                visiblesymbol = "0/0/0/0"
-                # print(hiddensymbol + " " + visiblesymbol)
+                for j in range(3, 6):
+                    v.append(str(choraleManager.notepitch(c3[j]) - choraleManager.notepitch(c[j])))
+                visiblesymbol = "/".join(v)
 
             try:
                 hiddensymbols.index(hiddensymbol)
