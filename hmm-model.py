@@ -43,4 +43,12 @@ model.transmat_ = (model.transmat_.T/model.transmat_.sum(axis=1)).T
 model.emissionprob_ = (model.emissionprob_.T/model.emissionprob_.sum(axis=1)).T
 
 model.startprob_ = np.zeros([hidden_states, 1])
-model.startprob_[15] = 1
+model.startprob_[:] = 1 / hidden_states
+
+[vis, hid] = model.sample(100)
+f = open("sample.txt", "w+")
+
+for i in range(0, len(vis)):
+    f.write(str(hid[i]) + " " + str(vis[i][0]) + "\n")
+
+f.close()
