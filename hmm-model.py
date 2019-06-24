@@ -93,6 +93,17 @@ def decode(model, data):
 
     return out
 
+def saveResults(out, outputdir):
+
+    for k, v in out.items():
+
+        f = open(outputdir + k, "w+")
+
+        for hidden, visible in zip(v.hiddens, v.visibles):
+            f.write(str(hidden + 1) + '\t' + str(visible + 1) + '\n')
+        
+        f.close()
+
 if __name__ == '__main__':
 
     assert not len(sys.argv) < 2, 'model name required'
@@ -100,9 +111,11 @@ if __name__ == '__main__':
 
     modeldir = "model-" + name + "/"
     inputdir = modeldir + "input/"
+    outputdir = modeldir + "viterbi/"
 
     assert exists(modeldir) and not isfile(modeldir), 'model ' + name + ' not found' 
     assert exists(inputdir) and not isfile(inputdir), 'input for model ' + name + ' not found'
+    assert exists(outputdir) and not isfile(outputdir), 'output dir for model ' + name + ' not found'
     assert exists(modeldir + "PARAMETERS") and isfile(modeldir + "PARAMETERS"), 'input PARAMETERS for model ' + name + ' not found'
 
     rawParameters = open(modeldir + "PARAMETERS").readlines()
@@ -116,7 +129,9 @@ if __name__ == '__main__':
 
     # create HMM model
     model = createModel(parameters, data)
-    
+
     # predict hidden states using model
     out = decode(model, data)
 
+    # save results
+    saveResults(out, outputdir)
