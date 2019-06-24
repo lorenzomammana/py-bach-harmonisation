@@ -70,6 +70,29 @@ def createModel(parameters, data):
 
     return model
 
+def decode(model, data):
+
+    out = {}
+    
+    chunk = 1 / len(data)
+    perc = 0.0
+
+    for k, v in data.items():
+        out[k] = DotMap()
+        out[k].visibles = v.visibles.copy()
+
+        X = np.atleast_2d(out[k].visibles).T
+
+        logprob, H = model.decode(X)
+
+        out[k].logprob = logprob
+        out[k].hiddens = H
+
+        perc += chunk
+        print('Processing: ' + "{:.2f}".format(perc * 100) + '%', end='\r')
+
+    return out
+
 if __name__ == '__main__':
 
     assert not len(sys.argv) < 2, 'model name required'
@@ -88,7 +111,12 @@ if __name__ == '__main__':
     parameters.hidden_states = int(rawParameters[4].split(":")[1].strip()) - 1
     parameters.visible_states = int(rawParameters[5].split(":")[1].strip()) - 1
 
+    # read (hidden, visible) pairs from input/ folder 
     data = readInputs(inputdir)
-    model = createModel(parameters, data)
 
+    # create HMM model
+    model = createModel(parameters, data)
+    
+    # predict hidden states using model
+    out = decode(model, data)
 
