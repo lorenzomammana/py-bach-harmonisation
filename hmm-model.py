@@ -2,55 +2,93 @@ from hmmlearn import hmm
 import numpy as np
 import sys
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, exists, join
+from dotmap import DotMap
 
 # TODO viterbi
 
-# name = sys.argv[1]
-name = "chords-dur"
+def readInputs(inputdir):
 
-modeldir = "model-" + name + "/"
-inputdir = modeldir + "input/"
+    inputfiles = [f for f in listdir(inputdir) if isfile(join(inputdir, f))]
 
-parameters = open(modeldir + "PARAMETERS").readlines()
+    data = {}
 
-hidden_states = int(parameters[4].split(":")[1].strip()) - 1
-visible_states = int(parameters[5].split(":")[1].strip()) - 1
+    for file in inputfiles:
+        rows = open(inputdir + file).readlines()
+        data[file] = DotMap()
+        data[file].hiddens = []
+        data[file].visibles = []
+        data[file].size = 0
 
-model = hmm.MultinomialHMM(n_components=hidden_states)
+        for i in range(0, len(rows)):
+            hidden_state = int(rows[i].split("\t")[0]) - 1
+            visible_state = int(rows[i].split("\t")[1]) - 1
 
-model.transmat_ = np.zeros([hidden_states, hidden_states])
-model.emissionprob_ = np.zeros([hidden_states, visible_states])
+            data[file].hiddens.append(hidden_state)
+            data[file].visibles.append(visible_state)
 
-inputfiles = [f for f in listdir(inputdir) if isfile(join(inputdir, f))]
+            data[file].size += 1
+    
+    return data
 
-for file in inputfiles:
-    rows = open(inputdir + file).readlines()
+def createModel(parameters, data):
 
-    for i in range(1, len(rows)):
-        hidden_state_l = int(rows[i - 1].split("\t")[0]) - 1
-        hidden_state_c = int(rows[i].split("\t")[0]) - 1
-        visible_state = int(rows[i].split("\t")[1]) - 1
+    model = hmm.MultinomialHMM(n_components=parameters.hidden_states)
 
-        model.transmat_[hidden_state_l, hidden_state_c] += 1
-        model.emissionprob_[hidden_state_c, visible_state] += 1
+    model.transmat_ = np.zeros((parameters.hidden_states, parameters.hidden_states))
+    model.emissionprob_ = np.zeros((parameters.hidden_states, parameters.visible_states))
 
-for idx in np.where(~model.transmat_.any(axis=1)):
-    model.transmat_[idx, :] = 1 / hidden_states
+    for _, v in data.items():
+        
+        model.emissionprob_[v.hiddens[0], v.visibles[0]] += 1
 
-for idx in np.where(~model.emissionprob_.any(axis=1)):
-    model.emissionprob_[idx, :] = 1 / visible_states
+        for i in range(1, v.size):
+            hidden_state_l = v.hiddens[i - 1]
+            hidden_state_c = v.hiddens[i]
+            visible_state_c = v.visibles[i]
 
-model.transmat_ = (model.transmat_.T/model.transmat_.sum(axis=1)).T
-model.emissionprob_ = (model.emissionprob_.T/model.emissionprob_.sum(axis=1)).T
+            model.transmat_[hidden_state_l, hidden_state_c] += 1
+            model.emissionprob_[hidden_state_c, visible_state_c] += 1
 
-model.startprob_ = np.zeros([hidden_states, 1])
-model.startprob_[:] = 1 / hidden_states
+    for idx in np.where(~model.transmat_.any(axis=1)):
+        model.transmat_[idx, :] = 1 / parameters.hidden_states
 
-[vis, hid] = model.sample(100)
-f = open("sample.txt", "w+")
+    for idx in np.where(~model.emissionprob_.any(axis=1)):
+        model.emissionprob_[idx, :] = 1 / parameters.visible_states
 
-for i in range(0, len(vis)):
-    f.write(str(hid[i]) + " " + str(vis[i][0]) + "\n")
+    model.startprob_ = np.full(parameters.hidden_states, (1 / parameters.hidden_states))
+    model.transmat_ = (model.transmat_.T / model.transmat_.sum(axis=1)).T
+    model.emissionprob_ = (model.emissionprob_.T / model.emissionprob_.sum(axis=1)).T
 
-f.close()
+    # [vis, hid] = model.sample(100)
+    # f = open("sample.txt", "w+")
+
+    # for i in range(0, len(vis)):
+    #   f.write(str(hid[i]) + " " + str(vis[i][0]) + "\n")
+
+    # f.close()
+
+    return model
+
+if __name__ == '__main__':
+
+    assert not len(sys.argv) < 2, 'model name required'
+    name = sys.argv[1]
+
+    modeldir = "model-" + name + "/"
+    inputdir = modeldir + "input/"
+
+    assert exists(modeldir) and not isfile(modeldir), 'model ' + name + ' not found' 
+    assert exists(inputdir) and not isfile(inputdir), 'input for model ' + name + ' not found'
+    assert exists(modeldir + "PARAMETERS") and isfile(modeldir + "PARAMETERS"), 'input PARAMETERS for model ' + name + ' not found'
+
+    rawParameters = open(modeldir + "PARAMETERS").readlines()
+
+    parameters = DotMap()
+    parameters.hidden_states = int(rawParameters[4].split(":")[1].strip()) - 1
+    parameters.visible_states = int(rawParameters[5].split(":")[1].strip()) - 1
+
+    data = readInputs(inputdir)
+    model = createModel(parameters, data)
+
+
