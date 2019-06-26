@@ -101,7 +101,7 @@ def saveResults(out, outputdir):
         f = open(outputdir + k, "w+")
 
         for hidden, visible in zip(v.hiddens, v.visibles):
-            f.write(str(hidden + 1) + '\t' + str(visible + 1) + '\n')
+            f.write(str(hidden + 1) + ' ' + str(visible + 1) + '\n')
         
         f.close()
 
