@@ -33,13 +33,17 @@ def readInputs(inputdir):
 
 def createModel(parameters, data):
 
+    K_SMOOTHING = 0.01
+
     model = hmm.MultinomialHMM(n_components=parameters.hidden_states)
 
+    model.startprob_ = np.zeros(parameters.hidden_states)
     model.transmat_ = np.zeros((parameters.hidden_states, parameters.hidden_states))
     model.emissionprob_ = np.zeros((parameters.hidden_states, parameters.visible_states))
 
     for _, v in data.items():
         
+        model.startprob_[v.hiddens[0]] += 1
         model.emissionprob_[v.hiddens[0], v.visibles[0]] += 1
 
         for i in range(1, v.size):
@@ -50,13 +54,10 @@ def createModel(parameters, data):
             model.transmat_[hidden_state_l, hidden_state_c] += 1
             model.emissionprob_[hidden_state_c, visible_state_c] += 1
 
-    for idx in np.where(~model.transmat_.any(axis=1)):
-        model.transmat_[idx, :] = 1 / parameters.hidden_states
+    model.transmat_ += K_SMOOTHING
+    model.emissionprob_ += K_SMOOTHING
 
-    for idx in np.where(~model.emissionprob_.any(axis=1)):
-        model.emissionprob_[idx, :] = 1 / parameters.visible_states
-
-    model.startprob_ = np.full(parameters.hidden_states, (1 / parameters.hidden_states))
+    model.startprob_ = model.startprob_ / model.startprob_.sum()
     model.transmat_ = (model.transmat_.T / model.transmat_.sum(axis=1)).T
     model.emissionprob_ = (model.emissionprob_.T / model.emissionprob_.sum(axis=1)).T
 
