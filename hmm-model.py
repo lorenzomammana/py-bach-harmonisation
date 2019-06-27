@@ -7,13 +7,16 @@ from dotmap import DotMap
 
 # TODO viterbi
 
-def readInputs(inputdir):
+def readInputs(inputdir, trainset):
 
-    inputfiles = [f for f in listdir(inputdir) if isfile(join(inputdir, f))]
+    f = open('datasets/' + trainset)
+    inputfiles = f.read().splitlines()
+    f.close()
 
     data = {}
 
     for file in inputfiles:
+        file = 'bch' + file.zfill(3) + '.txt'
         rows = open(inputdir + file).readlines()
         data[file] = DotMap()
         data[file].hiddens = []
@@ -109,15 +112,17 @@ if __name__ == '__main__':
 
     assert not len(sys.argv) < 2, 'model name required'
     name = sys.argv[1]
+    train = sys.argv[2]
+    test = sys.argv[3]
 
     modeldir = "model-" + name + "/"
     inputdir = modeldir + "input/"
     outputdir = modeldir + "viterbi/"
 
-    assert exists(modeldir) and not isfile(modeldir), 'model ' + name + ' not found' 
-    assert exists(inputdir) and not isfile(inputdir), 'input for model ' + name + ' not found'
-    assert exists(outputdir) and not isfile(outputdir), 'output dir for model ' + name + ' not found'
-    assert exists(modeldir + "PARAMETERS") and isfile(modeldir + "PARAMETERS"), 'input PARAMETERS for model ' + name + ' not found'
+    # assert exists(modeldir) and not isfile(modeldir), 'model ' + name + ' not found'
+    # assert exists(inputdir) and not isfile(inputdir), 'input for model ' + name + ' not found'
+    # assert exists(outputdir) and not isfile(outputdir), 'output dir for model ' + name + ' not found'
+    # assert exists(modeldir + "PARAMETERS") and isfile(modeldir + "PARAMETERS"), 'input PARAMETERS for model ' + name + ' not found'
 
     rawParameters = open(modeldir + "PARAMETERS").readlines()
 
@@ -126,13 +131,16 @@ if __name__ == '__main__':
     parameters.visible_states = int(rawParameters[5].split(":")[1].strip()) - 1
 
     # read (hidden, visible) pairs from input/ folder 
-    data = readInputs(inputdir)
+    traindata = readInputs(inputdir, train)
 
     # create HMM model
-    model = createModel(parameters, data)
+    model = createModel(parameters, traindata)
 
     # predict hidden states using model
-    out = decode(model, data)
+
+    testdata = readInputs(inputdir, test)
+
+    out = decode(model, testdata)
 
     # save results
     saveResults(out, outputdir)
