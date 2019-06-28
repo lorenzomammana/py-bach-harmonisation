@@ -1,0 +1,20 @@
+\chapter{Hidden Markov Model}\label{ch:hmm-chords}
+Identifichiamo la sequenza di note della melodia con Y e l'armonizzazione sottostante con C, in particolare $y_t$ rappresenta la nota della melodia al tempo t e $c_t$ rappresenta lo stato armonico al tempo t. \\
+E' stato utilizzato un modello di Markov con assunzioni del primo ordine, ovvero tale per cui vale:
+\begin{equation}
+P(c_t|c_{t-1},...,c_0) = P(c_t|c_{t-1})
+\end{equation}
+\begin{equation}
+P(y_t|c_t,...,c_0,y_{t-1},...,y_0) = P(y_t|c_t)
+\end{equation}
+In particolare vengono costruiti due modelli di Markov, uno relativo ai corali in tonalità maggiore ed uno relativo ai corali in tonalità minore.
+Il dataset iniziale è stato così suddiviso:
+\begin{itemize}
+\item 121 file di training (tonalità maggiore)
+\item 81 file di test (tonalità maggiore)
+\item 108 file di training (tonalità minore)
+\item 72 file di test (tonalità minore)
+\end{itemize}
+Il modello di Markov è stato costruito utilizzando la libreria Python "hmmlearn", avendo a disposizione sia gli stati visibili che gli stati nascosti non è stato necessario apprendere i parametri del modello tramite Expected Maximization, ma sono state invece costruite utilizzando i dati sia la matrice di transizione che la matrice di emissione.
+In particolare per gestire il grande numero di zero all'interno di queste matrici si è proceduto applicando uno smoothing additivo sommando 0.01 ad ogni elemento delle matrici prima di normalizzarle per renderle stocastiche.
+Anche la distribuzione iniziale di probabilità è stata calcolata utilizzando i dati, andando a dare una probabilità maggiore agli stati più frequenti all'inizio dei corali.

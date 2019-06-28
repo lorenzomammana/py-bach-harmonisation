@@ -1,0 +1,41 @@
+\chapter{Operazioni preliminari}\label{ch:th-music}
+
+\section{Disclaimer}
+Gli autori non sono musicisti, ne hanno mai studiato musica! \\
+La nostra conoscenza in merito è stata costruita nel periodo del progetto e come tale potrà contenere inesattezze di ogni sorta.
+
+\section{Dataset}
+Il dataset utilizzato è composto da 382 corali composti da Johann Sebastian Bach in formato testuale come mostrato in figura.
+Dall'header estraiamo alcune informazioni importanti come:
+\begin{itemize}
+\item Tonart: rappresenta la tonalità con cui è composto il corale (dur = Maggiore, moll = Minore)
+\item Takt: rappresenta la time signature del corale
+\item Tempo: rappresenta la velocità del corale
+\end{itemize}
+In particolare la notazione utilizzata per descrivere la tonalità è quella utilizzata principalmente nelle zone di influenza germanica, la conversione ad un sistema a noi più familiare è immediata
+\begin{table}[H]
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+A  & H  & C  & D  & E   & F  & G  \\ \hline
+Do & Re & Mi & Fa & Sol & La & Si \\ \hline
+\end{tabular}
+\end{table}
+La composizione vera e propria si articola su diverse colonne:
+\begin{itemize}
+\item Il numero contenuto nella prima colonna rappresenta l'inizio di una frase (unità musicale che ha senso anche se suonata singolarmente)
+\item Il numero contenuto nella seconda colonna rappresenta l'inizio di una nuova battuta
+\item La terza colonna rappresenta la nota eseguita dal soprano
+\item La quarta colonna rappresenta la nota eseguita dal contralto
+\item La quinta colonna rappresenta la nota eseguita dal tenore
+\item La sesta colonna rappresenta la nota eseguita dal basso
+\item L'ultima colonna ci da un'indicazione riguardo la funzione armonica di una certa battuta.
+\end{itemize}
+
+Il dataset viene inizialmente suddiviso in corali in tonalità maggiore e corali in tonalità minore in quanto la loro composizione è nettamente diversa.
+
+\section{Preprocessing}
+Il dataset così definito è ovviamente impossibile da utilizzare per addestrare un HMM, è necessario, per ogni file, costruire una coppia [stato nascosto-stato visibile] che sia in grado di rappresentarne la struttura musicale. \\
+Questa operazione viene effettuata tramite lo script hmm-data.py, che legge i corali e costruisce l'input per il modello di Markov.
+In particolare gli stati visibili rappresentano le note relative al soprano, mentre gli stati nascosti rappresentano le corde e la loro relativa funzione armonica.
+Come vediamo dalla figura uno stato nascosto è nella forma a:b:c:0/Y, dove a rappresenta il numero di semitoni del soprano rispetto, in maniera equivalente b e c rappresentano il numero di semitoni di contralto e tenore rispetto al basso.
+
