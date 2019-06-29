@@ -15,6 +15,21 @@ Il dataset iniziale è stato così suddiviso:
 \item 108 file di training (tonalità minore)
 \item 72 file di test (tonalità minore)
 \end{itemize}
-Il modello di Markov è stato costruito utilizzando la libreria Python "hmmlearn", avendo a disposizione sia gli stati visibili che gli stati nascosti non è stato necessario apprendere i parametri del modello tramite Expected Maximization, ma sono state invece costruite utilizzando i dati sia la matrice di transizione che la matrice di emissione.
+\section{Training}
+Il modello di Markov è stato costruito utilizzando la libreria Python "hmmlearn". \\
+Avendo a disposizione sia gli stati visibili che gli stati nascosti non è stato necessario apprendere i parametri del modello tramite Expected Maximization, ma sono state invece costruite, utilizzando i dati, sia la matrice di transizione che la matrice di emissione.\\
 In particolare per gestire il grande numero di zero all'interno di queste matrici si è proceduto applicando uno smoothing additivo sommando 0.01 ad ogni elemento delle matrici prima di normalizzarle per renderle stocastiche.
-Anche la distribuzione iniziale di probabilità è stata calcolata utilizzando i dati, andando a dare una probabilità maggiore agli stati più frequenti all'inizio dei corali.
+Anche la distribuzione iniziale di probabilità è stata calcolata utilizzando i dati, andando a dare una probabilità maggiore agli stati più frequenti all'inizio dei corali. \\
+Il modello relativo alla tonalità maggiore (chords-dur) contiene 2815 stati nascosti e 55 stati visibili, mentre il modello relativo alla tonalità minore (chords-moll) contiene 2593 stati nascosti e 52 stati visibili.
+\section{Testing}
+Per ogni file di test viene generata, data la relativa sequenza di stati visibili, la sequenza più probabile di stati nascosti utilizzando l'algoritmo di Viterbi.
+In tabella viene mostrato quanto gli stati nascosti prodotti siano equivalenti a quelli reali. \\
+INSERIRE TABELLA RISULTATI
+Come ci si aspetta i risultati sono abbastanza diversi in quanto il modello non ha alcuna informazione relativa ad esempio al periodo in cui è stato composto un determinato corale, oppure per quale occasione. Senza l'ausilio di ulteriori dati esterni sarebbe impossibile ricostruire perfettamente i corali originali.
+\section{Ricostruzione dei risultati}
+Mediante l'utilizzo dello script "hmm-output-expand.py" è possibile ricostruire, a partire dalle coppie [hidden-visible] costruite da Viterbi, il file in notazione musicale.\\
+In questo punto notiamo uno dei principali problemi del modello costruito, ovvero la mancanza di informazione temporale relativa agli stati visibili e nascosti. \\
+Per ricostruire il file musicale è necessario rispettare le cadenze della musica originale e ciò rende molto complicato ad esempio generare nuova musica con il modello. Questo banalmente perchè la musica generata, per quanto orecchiabile, non avrà una struttura temporale sensata ed ogni nota avrà la stessa lunghezza, come tale la melodia prodotta risulterà molto più "robotica" e poco reale.
+\section{Generazione del file MIDI}
+Il formato MIDI è un protocollo standard per la composizione e riproduzione di file musicali. Tramite lo script "chorale2midi.py" è possibile convertire i file testuali in formato MIDI in modo tale da poterli riprodurre. \\
+Questo è ovviamente fondamentale per permettere di valutare la bontà dei risultati anche da parte di chi non è in grado di leggere i file musicali.
