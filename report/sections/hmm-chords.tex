@@ -26,10 +26,30 @@ Per ogni file di test viene generata, data la relativa sequenza di stati visibil
 In tabella viene mostrato quanto gli stati nascosti prodotti siano equivalenti a quelli reali. \\
 INSERIRE TABELLA RISULTATI
 Come ci si aspetta i risultati sono abbastanza diversi in quanto il modello non ha alcuna informazione relativa ad esempio al periodo in cui è stato composto un determinato corale, oppure per quale occasione. Senza l'ausilio di ulteriori dati esterni sarebbe impossibile ricostruire perfettamente i corali originali.
+\begin{figure}[H]
+	\centering
+	\caption{A sx l'originale, a dx l'armonizzazione più probabile del nostro modello}
+	\includegraphics{figures/viterbi.png}
+	\label{viterbi}
+\end{figure}
+\noindent
+Interpretare i risultati non è semplice, la figura \ref{viterbi} non è per nulla esplicativa, se ragionassimo in termini di accuratezza sembrerebbe che il nostro modello sia assolutamente pessimo, ma l'obiettivo non è quello di costruire risultati identici all'originale, ma armonizzazioni musicalmente accettabili e orecchiabili. \\
+Presentare i risultati sotto forma di spartito musicale può favorirne la comprensione per chi è in grado di leggerli, ma non è abbastanza per chi non ha una approfondita conoscenza del dominio. Per questo motivo è necessario trasformare i risultati ottenuti in un formato musicale udibile.
 \section{Ricostruzione dei risultati}
 Mediante l'utilizzo dello script "hmm-output-expand.py" è possibile ricostruire, a partire dalle coppie [hidden-visible] costruite da Viterbi, il file in notazione musicale.\\
 In questo punto notiamo uno dei principali problemi del modello costruito, ovvero la mancanza di informazione temporale relativa agli stati visibili e nascosti. \\
 Per ricostruire il file musicale è necessario rispettare le cadenze della musica originale e ciò rende molto complicato ad esempio generare nuova musica con il modello. Questo banalmente perchè la musica generata, per quanto orecchiabile, non avrà una struttura temporale sensata ed ogni nota avrà la stessa lunghezza, come tale la melodia prodotta risulterà molto più "robotica" e poco reale.
 \section{Generazione del file MIDI}
-Il formato MIDI è un protocollo standard per la composizione e riproduzione di file musicali. Tramite lo script "chorale2midi.py" è possibile convertire i file testuali in formato MIDI in modo tale da poterli riprodurre. \\
-Questo è ovviamente fondamentale per permettere di valutare la bontà dei risultati anche da parte di chi non è in grado di leggere i file musicali.
+Il protocollo MIDI è uno standard per la composizione e riproduzione di file musicali. Tramite lo script "chorale2midi.py" è possibile convertire i file testuali generati nel passaggio precedente in formato MIDI in modo tale da poterli riprodurre. \\
+\section{Armonizzazione di musica moderna}
+Il modello di Markov proposto è teoricamente in grado di armonizzare una melodia qualsiasi, il task è però particolarmente complicato perchè la struttura dei file di input è molto rigida, in particolare:
+\begin{itemize}
+\item la durata delle note deve necessariamente essere multiplo di 240
+\item in una battuta ci possono essere massimo quattro note
+\item l'armonizzazione viene prodotta solamente sulle note che compaiono all'inizio di una battuta
+\item non c'è mai una pausa tra note nella stessa battuta
+\end{itemize} 
+Il primo motivo è facilmente gestibile andando ad arrotondare la durata delle note al multiplo di 240 più vicino, ciò altera leggermente la melodia, ma non abbastanza da rovinarla.\\
+Il secondo è un problema legato principalmente a canzoni veloci o complesse che non sono gestibili dal modello. \\
+Il terzo problema è relativo al fatto che in praticamente qualsiasi canzone troviamo note che iniziano all'interno della battuta, tutte queste note verranno trascritte nel risultato finale, ma non verrà fatta alcuna armonizzazione su di esse.
+L'ultimo problema è quello forse più complicato da gestire, in quanto richiede l'aggiunta di note fittizie all'interno del file che verranno poi trattate come delle pause.
