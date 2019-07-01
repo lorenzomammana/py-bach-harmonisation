@@ -104,6 +104,46 @@ def decode(model, data):
     return out
 
 
+def sample(model, data):
+
+    out = {}
+
+    chunk = 1 / len(data)
+    perc = 0.0
+
+    for k, v in data.items():
+        out[k] = DotMap()
+        out[k].visibles = v.visibles.copy()
+
+        X = np.atleast_2d(out[k].visibles).T
+
+        logprob, H = model.score_samples(X)
+        nrows, ncols = H.shape
+
+        out[k].logprob = logprob
+        out[k].hiddens = np.zeros(nrows, dtype=int)
+        
+        samples = np.random.rand(nrows)
+
+        for i in range(0, nrows):
+
+            sample = samples[i]
+
+            for j in range(0, ncols):
+
+                sample -= H[i, j]
+
+                if sample < 0:
+                    out[k].hiddens[i] = j
+                    break
+
+
+        perc += chunk
+        print('Processing: ' + "{:.2f}".format(perc * 100) + '%', end='\r')
+
+    return out
+
+
 def saveResults(out, outputdir):
 
     for k, v in out.items():
@@ -118,14 +158,24 @@ def saveResults(out, outputdir):
 
 if __name__ == '__main__':
 
-    assert not len(sys.argv) < 2, 'model name required'
+    assert not len(sys.argv) < 5, 'ERROR: <model name> <train data> <test data> <mode> required'
     name = sys.argv[1]
     train = sys.argv[2]
     test = sys.argv[3]
+    mode = sys.argv[4] # 'viterbi' or 'sample'
 
     modeldir = "model-" + name + "/"
     inputdir = modeldir + "input/"
-    outputdir = modeldir + "viterbi/"
+
+    if mode == 'viterbi':
+        outputdir = modeldir + "viterbi/"
+
+    elif mode == 'sample':
+        outputdir = modeldir + "sampled/"
+
+    else:
+        print('ERROR: invalid <mode>')
+        exit(1)
 
     # assert exists(modeldir) and not isfile(modeldir), 'model ' + name + ' not found'
     # assert exists(inputdir) and not isfile(inputdir), 'input for model ' + name + ' not found'
@@ -145,10 +195,17 @@ if __name__ == '__main__':
     model = createModel(parameters, traindata)
 
     # predict hidden states using model
-
     testdata = readInputs(inputdir, test)
 
-    out = decode(model, testdata)
+    if mode == 'viterbi':
+        out = decode(model, testdata)
+
+    elif mode == 'sample':
+        out = sample(model, testdata)
+
+    else:
+        print('ERROR: invalid <mode>')
+        exit(1)
 
     # save results
     saveResults(out, outputdir)
