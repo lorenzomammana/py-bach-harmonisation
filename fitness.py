@@ -3,7 +3,7 @@ from os import listdir
 from os.path import isfile, exists, join
 from dotmap import DotMap
 
-def readInputs(filedir, sep):
+def readInputs(filedir):
 
     inputfiles = [f for f in listdir(filedir) if isfile(join(filedir, f))]
 
@@ -16,7 +16,7 @@ def readInputs(filedir, sep):
         data[file].size = 0
 
         for i in range(0, len(rows)):
-            hidden_state = int(rows[i].split(sep)[0]) - 1
+            hidden_state = int(rows[i].replace('\t', ' ').split()[0]) - 1
 
             data[file].hiddens.append(hidden_state)
             data[file].size += 1
@@ -30,8 +30,8 @@ if __name__ == '__main__':
     inputDir = sys.argv[1]
     outputDir = sys.argv[2]
 
-    original = readInputs(inputDir, sep="\t")
-    viterbi = readInputs(outputDir, sep=" ")
+    original = readInputs(inputDir)
+    viterbi = readInputs(outputDir)
 
     common = [f for f in original.keys() if f in viterbi.keys()]
 
