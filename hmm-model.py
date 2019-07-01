@@ -7,6 +7,7 @@ from dotmap import DotMap
 
 # TODO viterbi
 
+
 def readInputs(inputdir, trainset):
 
     f = open('datasets/' + trainset)
@@ -31,8 +32,9 @@ def readInputs(inputdir, trainset):
             data[file].visibles.append(visible_state)
 
             data[file].size += 1
-    
+
     return data
+
 
 def createModel(parameters, data):
 
@@ -41,11 +43,13 @@ def createModel(parameters, data):
     model = hmm.MultinomialHMM(n_components=parameters.hidden_states)
 
     model.startprob_ = np.zeros(parameters.hidden_states)
-    model.transmat_ = np.zeros((parameters.hidden_states, parameters.hidden_states))
-    model.emissionprob_ = np.zeros((parameters.hidden_states, parameters.visible_states))
+    model.transmat_ = np.zeros(
+        (parameters.hidden_states, parameters.hidden_states))
+    model.emissionprob_ = np.zeros(
+        (parameters.hidden_states, parameters.visible_states))
 
     for _, v in data.items():
-        
+
         model.startprob_[v.hiddens[0]] += 1
         model.emissionprob_[v.hiddens[0], v.visibles[0]] += 1
 
@@ -62,7 +66,8 @@ def createModel(parameters, data):
 
     model.startprob_ = model.startprob_ / model.startprob_.sum()
     model.transmat_ = (model.transmat_.T / model.transmat_.sum(axis=1)).T
-    model.emissionprob_ = (model.emissionprob_.T / model.emissionprob_.sum(axis=1)).T
+    model.emissionprob_ = (model.emissionprob_.T /
+                           model.emissionprob_.sum(axis=1)).T
 
     # [vis, hid] = model.sample(100)
     # f = open("sample.txt", "w+")
@@ -74,10 +79,11 @@ def createModel(parameters, data):
 
     return model
 
+
 def decode(model, data):
 
     out = {}
-    
+
     chunk = 1 / len(data)
     perc = 0.0
 
@@ -97,6 +103,7 @@ def decode(model, data):
 
     return out
 
+
 def saveResults(out, outputdir):
 
     for k, v in out.items():
@@ -105,8 +112,9 @@ def saveResults(out, outputdir):
 
         for hidden, visible in zip(v.hiddens, v.visibles):
             f.write(str(hidden + 1) + ' ' + str(visible + 1) + '\n')
-        
+
         f.close()
+
 
 if __name__ == '__main__':
 
@@ -130,7 +138,7 @@ if __name__ == '__main__':
     parameters.hidden_states = int(rawParameters[4].split(":")[1].strip()) - 1
     parameters.visible_states = int(rawParameters[5].split(":")[1].strip()) - 1
 
-    # read (hidden, visible) pairs from input/ folder 
+    # read (hidden, visible) pairs from input/ folder
     traindata = readInputs(inputdir, train)
 
     # create HMM model
