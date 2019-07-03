@@ -38,12 +38,30 @@ Presentare i risultati sotto forma di spartito musicale può favorirne la compre
 \section{Sampling}
 E' possibile anche generare sequenze di stati in accordo alla distribuzione di probabilità del modello. Consideriamo $\alpha_{t-1}(j)$, la probabilità di avere visto le prime $t - 1$ osservazioni di una sequenza ed essere finiti nello stato j, possiamo calcolare la probabilità di aver visto i primi $t - 1$ eventi, essere finiti in uno stato qualsiasi, e poi eseguire una transizione verso uno stato k:
 \begin{equation}
-P(y_0 = Y_{i0}, y_1 = Y_{i1}, ...,y_{t-1}=Y_i_{t-1})
+\begin{aligned}
+P(y_0 = Y_{i0}, y_1 = Y_{i1}, ...,y_{t-1}=Y_{i_{t-1}},s_{t-1}=S_j, s_t=S_k) \\
+	=\alpha_{t-1}(j)P(s_t=S_k|s_{t-1}=S_j)
+\end{aligned}
+\end{equation}
+Possiamo usare questa equazione per calcolare $\rho_t(j|k)$ la probabilità di essere in uno stato $S_j$ al tempo $t-1$ data la sequenza di eventi osservati $Y_{i0}, Y_{i1},...,Y_{i{t-1}}$ e dato che saremo nello stato $S_k$ al tempo $t$:
+\begin{equation}
+\begin{aligned}
+\rho_t(j|k)=P(s_{t-1}=S_j|y_0 = Y_{i0}, y_1 = Y_{i1}, ...,y_{t-1}=Y_{i_{t-1}}, s_t=S_k) \\
+= \frac{\alpha_{t-1}(j)P(s_t=S_k|s_{t-1}=S_j)}{\sum_{l}P(s_t=S_k|s_{t-1}=S_l)}
+\end{aligned}
+\end{equation}
+Per instanziare una sequenza di stati $s0=S_{v0},s1=S_{v1},...,s_T=s_{vT}$ viene inizialmente scelto lo stato finale utilizzando la distribuzione di probabilità del modello:
+\begin{equation}
+P(s_T=S_j|y_0=Y_{i0},y_1=Y_{i1},...,y_T=Y_{iT}) = \frac{\alpha_T(j)}{\sum_l\alpha_T(l)}
+\end{equation}
+Una volta scelto $v_T$ tale per cui lo stato finale risulti essere $s_t=S_{vt}$ possiamo usare le variabili $\rho_t(j|k)$ per muoverci all'indietro sulla sequenza:
+\begin{equation}
+P(s_T=S_j|y_0=Y_{i0},y_1=Y_{i1},...,y_T=Y_{iT}, s_{t+1}=S_{v_{t+1}}) = \rho_{t+1}(j|v_{t+1})
 \end{equation}
 \section{Ricostruzione dei risultati}
-Mediante l'utilizzo dello script "hmm-output-expand.py" è possibile ricostruire, a partire dalle coppie [hidden-visible] costruite da Viterbi, il file in notazione musicale.\\
+Mediante l'utilizzo dello script "hmm-output-expand.py" è possibile ricostruire, a partire dalle coppie [hidden-visible] costruite tramite Sampling o Viterbi, il file in notazione musicale.\\
 In questo punto notiamo uno dei principali problemi del modello costruito, ovvero la mancanza di informazione temporale relativa agli stati visibili e nascosti. \\
-Per ricostruire il file musicale è necessario rispettare le cadenze della musica originale e ciò rende molto complicato ad esempio generare nuova musica con il modello. Questo banalmente perchè la musica generata, per quanto orecchiabile, non avrà una struttura temporale sensata ed ogni nota avrà la stessa lunghezza, come tale la melodia prodotta risulterà molto più "robotica" e poco reale.
+Per ricostruire il file musicale è necessario rispettare le cadenze della musica originale e ciò rende molto complicato ad esempio generare nuova musica con il modello. Questo banalmente perchè la musica generata, per quanto orecchiabile, non avrà una struttura temporale sensata ed ogni nota avrà la stessa lunghezza, come tale la melodia prodotta risulterà molto "robotica" e poco reale.
 \section{Generazione del file MIDI}
 Il protocollo MIDI è uno standard per la composizione e riproduzione di file musicali. Tramite lo script "chorale2midi.py" è possibile convertire i file testuali generati nel passaggio precedente in formato MIDI in modo tale da poterli riprodurre. \\
 \section{Armonizzazione di musica moderna}
