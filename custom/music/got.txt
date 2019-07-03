@@ -1,0 +1,169 @@
+Choralname = got
+Anzahl Stimmen = 4
+Tonart = A-moll
+Takt = 6/4
+Tempo = 180
+Notentextausgabe in 16tel-Schritten:
+
+PHRASE	TAKT	SOPRAN	ALT	TENOR	BASS	HARMONIK
+
+1		E 1	A 1	E 1	A -1	T
+						
+						
+						
+	1	A 0	A 1	E 1	A 0	T
+						
+						
+						
+		C 1	H 1	E 1	G#0	D3
+						
+		D 1				
+						
+		E 1	A 1	E 1	A 0	T
+						
+						
+						
+2		A 0	A 1	E 1	A 0	T
+						
+						
+						
+	2	C 1	H 1	E 1	G#0	D3
+						
+		D 1				
+						
+		E 1	A 1	E 1	A 0	T
+						
+						
+						
+		A 0	A 1	E 1	A 0	T
+						
+						
+						
+3		C#1	H 1	E 1	G#0	D3
+						
+		D 1				
+						
+	3	E 1	A 1	E 1	A 0	T
+						
+						
+						
+		A 0	A 1	E 1	A 0	T
+						
+						
+						
+		C#1	H 1	E 1	G#0	D3
+						
+		D 1				
+						
+4		E 1	A 1	E 1	A 0	T
+						
+						
+						
+	4					T
+						
+						
+						
+						T
+						
+						
+						
+		A 0				
+						
+						
+						
+5						T
+						
+						
+						
+	5					T
+						
+						
+						
+		C 1				
+						
+		D 1				
+						
+		E 1				
+						
+						
+						
+6						T
+						
+						
+						
+	6	A 0				T
+						
+						
+						
+						T
+						
+						
+						
+		D 1				
+						
+		E 1				
+						
+7		H 0				
+						
+						
+						
+	7	E 0				
+						
+						
+						
+		G 0				
+						
+		A 0				
+						
+		H 0				
+						
+						
+						
+8		E 0				
+						
+						
+						
+	8	G 0				
+						
+		A 0				
+						
+		H 0				
+						
+						
+						
+		E 0				
+						
+						
+						
+9		G 0				
+						
+		A 0				
+						
+	9	H 0				
+						
+						
+						
+		E 0				
+						
+						
+						
+		G 0				
+						
+		A 0				
+						
+10		D 1				T
+						
+						
+						
+	10					T
+						
+						
+						
+						T
+						
+						
+						
+		G 0				
+						
+						
+						
