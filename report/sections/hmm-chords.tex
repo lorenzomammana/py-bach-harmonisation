@@ -35,6 +35,11 @@ Come ci si aspetta i risultati sono abbastanza diversi in quanto il modello non 
 \noindent
 Interpretare i risultati non è semplice, la figura \ref{viterbi} non è per nulla esplicativa, se ragionassimo in termini di accuratezza sembrerebbe che il nostro modello sia assolutamente pessimo, ma l'obiettivo non è quello di costruire risultati identici all'originale, ma armonizzazioni musicalmente accettabili e orecchiabili. \\
 Presentare i risultati sotto forma di spartito musicale può favorirne la comprensione per chi è in grado di leggerli, ma non è abbastanza per chi non ha una approfondita conoscenza del dominio. Per questo motivo è necessario trasformare i risultati ottenuti in un formato musicale udibile.
+\section{Sampling}
+E' possibile anche generare sequenze di stati in accordo alla distribuzione di probabilità del modello. Consideriamo $\alpha_{t-1}(j)$, la probabilità di avere visto le prime $t - 1$ osservazioni di una sequenza ed essere finiti nello stato j, possiamo calcolare la probabilità di aver visto i primi $t - 1$ eventi, essere finiti in uno stato qualsiasi, e poi eseguire una transizione verso uno stato k:
+\begin{equation}
+P(y_0 = Y_{i0}, y_1 = Y_{i1}, ...,y_{t-1}=Y_i_{t-1})
+\end{equation}
 \section{Ricostruzione dei risultati}
 Mediante l'utilizzo dello script "hmm-output-expand.py" è possibile ricostruire, a partire dalle coppie [hidden-visible] costruite da Viterbi, il file in notazione musicale.\\
 In questo punto notiamo uno dei principali problemi del modello costruito, ovvero la mancanza di informazione temporale relativa agli stati visibili e nascosti. \\
@@ -42,14 +47,15 @@ Per ricostruire il file musicale è necessario rispettare le cadenze della music
 \section{Generazione del file MIDI}
 Il protocollo MIDI è uno standard per la composizione e riproduzione di file musicali. Tramite lo script "chorale2midi.py" è possibile convertire i file testuali generati nel passaggio precedente in formato MIDI in modo tale da poterli riprodurre. \\
 \section{Armonizzazione di musica moderna}
-Il modello di Markov proposto è teoricamente in grado di armonizzare una melodia qualsiasi, il task è però particolarmente complicato perchè la struttura dei file di input è molto rigida, in particolare:
+Il modello di Markov proposto è teoricamente in grado di armonizzare una melodia qualsiasi, dato un file MIDI è possibile estrarre le note della melodia e utilizzarle come base per l'armonizzazione. Il task è però particolarmente complicato perchè la struttura dei file di input è molto rigida, in particolare:
 \begin{itemize}
-\item la durata delle note deve necessariamente essere multiplo di 240
+\item la durata delle note, nel file MIDI, deve necessariamente essere multiplo della durata di una nota semiminima (1/4)
 \item in una battuta ci possono essere massimo quattro note
-\item l'armonizzazione viene prodotta solamente sulle note che compaiono all'inizio di una battuta
 \item non c'è mai una pausa tra note nella stessa battuta
 \end{itemize} 
 Il primo motivo è facilmente gestibile andando ad arrotondare la durata delle note al multiplo di 240 più vicino, ciò altera leggermente la melodia, ma non abbastanza da rovinarla.\\
 Il secondo è un problema legato principalmente a canzoni veloci o complesse che non sono gestibili dal modello. \\
-Il terzo problema è relativo al fatto che in praticamente qualsiasi canzone troviamo note che iniziano all'interno della battuta, tutte queste note verranno trascritte nel risultato finale, ma non verrà fatta alcuna armonizzazione su di esse.
-L'ultimo problema è quello forse più complicato da gestire, in quanto richiede l'aggiunta di note fittizie all'interno del file che verranno poi trattate come delle pause.
+L'ultimo problema è quello forse più complicato da gestire, in quanto richiede l'aggiunta di note fittizie all'interno del file che verranno poi trattate come delle pause.\\
+In Python non sono presenti librerie in grado di gestire facilmente file MIDI in ingresso, per questo motivo la musica moderna è stata trascritta manualmente nei file di ingresso, per mancanza di tempo non è stato possibile effettuare automaticamente questo compito.
+A questo si aggiunge il fatto che, molto spesso, i file MIDI non sono correttamente divisi per canali (idealmente uno strumento per canale) e ciò rende ancora più complicato il parsing automatico di questi file.\\
+A puro scopo dimostrativo e ludico abbiamo provato ad armonizzare varie melodie moderne per vedere come suonerebbero se fossero state composte da Bach sotto forma di corale.
