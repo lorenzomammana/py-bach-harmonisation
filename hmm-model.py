@@ -4,8 +4,7 @@ import sys
 from os import listdir
 from os.path import isfile, exists, join
 from dotmap import DotMap
-
-# TODO viterbi
+import pickle
 
 
 def readInputs(inputdir, trainset):
@@ -193,6 +192,10 @@ if __name__ == '__main__':
 
     # create HMM model
     model = createModel(parameters, traindata)
+
+    f = open(modeldir + 'hmm-model.pkl', 'wb+')
+    pickle.dump(model, f)
+    f.close()
 
     # predict hidden states using model
     testdata = readInputs(inputdir, test)
