@@ -8,14 +8,21 @@ def addnote(start, note, duration, newbar, channel):
     if note == "P" or note == "":
         return 1
 
-    volume = 80
+    if channel == 0:
+        volume = 80
+    else:
+        volume = 70
 
     if newbar and stressbar:
         volume = 96
 
     # print(str(channel) + " " + str(choraleManager.notepitch(note)) +
-    #     " " + str(start) + " " + str(duration) + " " + str(volume))
-    input_midi.addNote(0, channel, choraleManager.notepitch(note), start, duration, volume)
+    #    " " + str(start) + " " + str(duration) + " " + str(volume))
+
+    if choraleManager.notepitch(note) > 127:
+        input_midi.addNote(0, channel, 127, start, duration, 0)
+    else:
+        input_midi.addNote(0, channel, choraleManager.notepitch(note), start, duration, volume)
 
 
 if __name__ == '__main__':
@@ -30,7 +37,8 @@ if __name__ == '__main__':
     f = open(filename, 'r')
 
     if "/" in filename:
-        outputfile = "midi/" + filename.split("/").pop().split(".")[0] + ".mid"
+        # outputfile = "midi/" + filename.split("/").pop().split(".")[0] + ".mid"
+        outputfile = "midi/" + filename.replace("/", "-") + ".mid"
     else:
         outputfile = "midi/" + filename.split(".")[0] + ".mid"
 
@@ -72,7 +80,6 @@ if __name__ == '__main__':
                 choraleManager.transposerow(keypitch, line.split("\t")[0:7])
 
             newnotes = [sopran, alt, tenor, bass]
-
             for i in range(toppart, 4):
                 if newnotes[i] != "" and newnotes[i][0] != "-":
                     duration = beat - started[i]
