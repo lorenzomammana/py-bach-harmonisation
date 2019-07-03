@@ -1,6 +1,7 @@
 import sys
 from chorale import Chorale
 import os
+import pickle
 
 
 def internal(arg):
@@ -65,6 +66,7 @@ if not os.path.exists(modeldir):
 # carica due array con i nomi dei file
 trainfiles = readentries(datasetdir + train)
 testfiles = readentries(datasetdir + test)
+dictionary = {}
 
 
 def processfile(file):
@@ -98,6 +100,9 @@ def processfile(file):
         except ValueError:
             visiblesymbols.append(visiblesymbol)
 
+        key = str(hiddensymbols.index(hiddensymbol)) + " " + str(visiblesymbols.index(visiblesymbol))
+        dictionary[key] = " ".join([column[2], column[3], column[4], column[5], column[9]])
+
         outputfile.write(str(hiddensymbols.index(hiddensymbol)) + "\t" +
                          str(visiblesymbols.index(visiblesymbol)) + "\n")
 
@@ -130,3 +135,6 @@ if __name__ == '__main__':
     f.write("Training data: " + train + "\n")
     f.write("Test data: " + test + "\n")
     f.close()
+
+    with open(modeldir + 'DICTIONARY.pkl', 'wb+') as f:
+        pickle.dump(dictionary, f, pickle.HIGHEST_PROTOCOL)
