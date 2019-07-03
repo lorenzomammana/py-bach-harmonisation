@@ -74,6 +74,7 @@ Il modello di Markov proposto è teoricamente in grado di armonizzare una melodi
 Il primo motivo è facilmente gestibile andando ad arrotondare la durata delle note al multiplo di 240 più vicino, ciò altera leggermente la melodia, ma non abbastanza da rovinarla.\\
 Il secondo è un problema legato principalmente a canzoni veloci o complesse che non sono gestibili dal modello. \\
 L'ultimo problema è quello forse più complicato da gestire, in quanto richiede l'aggiunta di note fittizie all'interno del file che verranno poi trattate come delle pause.\\
-In Python non sono presenti librerie in grado di gestire facilmente file MIDI in ingresso, per questo motivo la musica moderna è stata trascritta manualmente nei file di ingresso, per mancanza di tempo non è stato possibile effettuare automaticamente questo compito.
+In Python non sono presenti librerie in grado di gestire facilmente file MIDI in ingresso, per questo motivo la musica moderna è stata trascritta manualmente nei file testual e, per mancanza di tempo non è stato possibile effettuare automaticamente questo compito.
 A questo si aggiunge il fatto che, molto spesso, i file MIDI non sono correttamente divisi per canali (idealmente uno strumento per canale) e ciò rende ancora più complicato il parsing automatico di questi file.\\
-A puro scopo dimostrativo e ludico abbiamo provato ad armonizzare varie melodie moderne per vedere come suonerebbero se fossero state composte da Bach sotto forma di corale.
+A puro scopo dimostrativo e ludico abbiamo provato ad armonizzare varie melodie moderne e non per vedere come suonerebbero se fossero state composte da Bach sotto forma di corale.
+Nella maggior parte dei casi il suono è troppo cacofonico, principalmente quando la canzone è molto veloce o presenta una melodia con molte note per battuta.
