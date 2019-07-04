@@ -1,4 +1,4 @@
-\chapter{Hidden Markov Model}\label{ch:hmm-chords}
+\chapter{Chords HMM}\label{ch:hmm-chords}
 Identifichiamo la sequenza di note della melodia con Y e l'armonizzazione sottostante con C, in particolare $y_t$ rappresenta la nota della melodia al tempo t e $c_t$ rappresenta lo stato armonico al tempo t. \\
 E' stato utilizzato un modello di Markov con assunzioni del primo ordine, ovvero tale per cui vale:
 \begin{equation}
@@ -71,7 +71,7 @@ Il modello di Markov proposto è teoricamente in grado di armonizzare una melodi
 \item in una battuta ci possono essere massimo quattro note
 \item non c'è mai una pausa tra note nella stessa battuta
 \end{itemize} 
-Il primo motivo è facilmente gestibile andando ad arrotondare la durata delle note al multiplo di 240 più vicino, ciò altera leggermente la melodia, ma non abbastanza da rovinarla.\\
+Il primo motivo è facilmente gestibile andando ad arrotondare la durata delle note al multiplo più vicino, ciò altera leggermente la melodia, ma non abbastanza da rovinarla.\\
 Il secondo è un problema legato principalmente a canzoni veloci o complesse che non sono gestibili dal modello. \\
 L'ultimo problema è quello forse più complicato da gestire, in quanto richiede l'aggiunta di note fittizie all'interno del file che verranno poi trattate come delle pause.\\
 In Python non sono presenti librerie in grado di gestire facilmente file MIDI in ingresso, per questo motivo la musica moderna è stata trascritta manualmente nei file testual e, per mancanza di tempo non è stato possibile effettuare automaticamente questo compito.
