@@ -142,7 +142,7 @@
 % Enable hyperlinks and insert info into the pdf
 % file. Hypperref should be loaded as one of the 
 % last packages
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 \hypersetup{%
 	pdfpagelabels=true,%
 	plainpages=false,%
@@ -165,17 +165,10 @@
 \usepackage{makecell}
 
 
-\lstdefinestyle{sql}{
-   breaklines=true,                                    
-   language=SQL,
-   frame=ltrb,
-   framesep=5pt,
-   basicstyle=\normalsize,
-   keywordstyle=\ttfamily\color{OliveGreen},
-   identifierstyle=\ttfamily\color{MidnightBlue}\bfseries,
-   commentstyle=\color{Brown},
-   stringstyle=\ttfamily,
-   showstringspaces=false,
+\lstset{
+	float,
+	basicstyle=\ttfamily,
+	frame=single
 }
 
 \usepackage{multirow}

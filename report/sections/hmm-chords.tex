@@ -15,6 +15,17 @@ Il dataset iniziale è stato così suddiviso:
 \item 108 file di training (tonalità minore)
 \item 72 file di test (tonalità minore)
 \end{itemize}
+\section{Fitness function}
+L'accuratezza dei risultati generati dal modello è stata calcolata tramite la funzione di fitness $\phi: F \mapsto [0, 1]$ descritta nell'Equazione \ref{fitness} e, più il valore di $\phi(F)$ si avvicina a $1$, maggiore sarà l'accuratezza del modello.
+\begin{equation}\label{fitness}
+\phi(F)=\frac{\sum_{f \in F} H(f)}{\sum_{f \in F} |S_f|}
+\end{equation}
+\begin{itemize}
+	\item $F$ è un insieme contenente i nomi dei file da valutare.
+	\item $S_f$ è la sequenza di coppie $(h, v)$ corrispondente al file $f$; in particolare sono indicate con $S_{f,original}$ e $S_{f,generated}$ la sequenza originale e la sequenza generata dal modello per il medesimo $f$, rispettivamente.
+	\item $|S_f| = |S_{f,original}| = |S_{f,generated}|$ è la lunghezza della sequenza corrispondente al file $f$, la quale risulta essere uguale per entrambe le sequenze $S_{f,original}$ e $S_{f,generated}$.
+	\item $H(f)$ è il numero di stati nascosti $h_i$ equivalenti tra le sequenze $S_{f,original}$ e $S_{f,generated}$ , con $0 \leqslant i < |S_f|$.
+\end{itemize}
 \section{Training}
 Il modello di Markov è stato costruito utilizzando la libreria Python "hmmlearn". \\
 Avendo a disposizione sia gli stati visibili che gli stati nascosti non è stato necessario apprendere i parametri del modello tramite Expected Maximization, ma sono state invece costruite, utilizzando i dati, sia la matrice di transizione che la matrice di emissione.\\
@@ -23,17 +34,39 @@ Anche la distribuzione iniziale di probabilità è stata calcolata utilizzando i
 Il modello relativo alla tonalità maggiore (chords-dur) contiene 2815 stati nascosti e 55 stati visibili, mentre il modello relativo alla tonalità minore (chords-moll) contiene 2593 stati nascosti e 52 stati visibili.
 \section{Testing}
 Per ogni file di test viene generata, data la relativa sequenza di stati visibili, la sequenza più probabile di stati nascosti utilizzando l'algoritmo di Viterbi.
-In tabella viene mostrato quanto gli stati nascosti prodotti siano equivalenti a quelli reali. \\
-INSERIRE TABELLA RISULTATI
-Come ci si aspetta i risultati sono abbastanza diversi in quanto il modello non ha alcuna informazione relativa ad esempio al periodo in cui è stato composto un determinato corale, oppure per quale occasione. Senza l'ausilio di ulteriori dati esterni sarebbe impossibile ricostruire perfettamente i corali originali.
-\begin{figure}[H]
+La Tabella \ref{comparison} mostra quanto gli stati nascosti prodotti siano equivalenti a quelli reali attraverso la fitness function. \\
+
+\begin{table}[h]
 	\centering
-	\caption{A sx l'originale, a dx l'armonizzazione più probabile del nostro modello}
-	\includegraphics{figures/viterbi.png}
+	\begin{tabular}{|l|l|}
+		\hline
+		Model       & $\phi(F)$     \\ \hline
+		chords-dur  & 0.21114 \\ \hline
+		chords-moll & 0.22193 \\ \hline
+	\end{tabular}
+	\caption{Valori della funzione di fitness phi per i modelli chords-dur e chords-moll}
+	\label{comparison}
+\end{table}
+
+Come ci si aspetta i risultati sono abbastanza diversi in quanto il modello non ha alcuna informazione relativa ad esempio al periodo in cui è stato composto un determinato corale, oppure per quale occasione. Senza l'ausilio di ulteriori dati esterni sarebbe impossibile ricostruire perfettamente i corali originali.
+\begin{center}
+	\begin{minipage}[h]{.45\textwidth}
+		\lstinputlisting[label={viterbi-a},
+		title={(a)},
+		language={}]
+		{listings/viterbi-a.txt}
+	\end{minipage}
+	\hspace{.5cm}
+	\begin{minipage}[h]{.45\textwidth}
+		\lstinputlisting[label={viterbi-b},
+		title={(b)},
+		language={}]
+		{listings/viterbi-b.txt}
+	\end{minipage}
+	\captionof{lstlisting}{(a) Sequenza originale di stati (b) Armonizzazione più probabile generata dal nostro modello}
 	\label{viterbi}
-\end{figure}
-\noindent
-Interpretare i risultati non è semplice, la figura \ref{viterbi} non è per nulla esplicativa, se ragionassimo in termini di accuratezza sembrerebbe che il nostro modello sia assolutamente pessimo, ma l'obiettivo non è quello di costruire risultati identici all'originale, ma armonizzazioni musicalmente accettabili e orecchiabili. \\
+\end{center}
+Interpretare i risultati non è semplice, il Listato \ref{viterbi} non è per nulla esplicativo, se ragionassimo in termini di accuratezza sembrerebbe che il nostro modello sia assolutamente pessimo, ma l'obiettivo non è quello di costruire risultati identici all'originale, ma armonizzazioni musicalmente accettabili e orecchiabili. \\
 Presentare i risultati sotto forma di spartito musicale può favorirne la comprensione per chi è in grado di leggerli, ma non è abbastanza per chi non ha una approfondita conoscenza del dominio. Per questo motivo è necessario trasformare i risultati ottenuti in un formato musicale udibile.
 \section{Sampling}
 E' possibile anche generare sequenze di stati in accordo alla distribuzione di probabilità del modello. Consideriamo $\alpha_{t-1}(j)$, la probabilità di avere visto le prime $t - 1$ osservazioni di una sequenza ed essere finiti nello stato j, possiamo calcolare la probabilità di aver visto i primi $t - 1$ eventi, essere finiti in uno stato qualsiasi, e poi eseguire una transizione verso uno stato k:

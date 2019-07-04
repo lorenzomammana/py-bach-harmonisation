@@ -5,12 +5,13 @@ Gli autori non sono musicisti, ne hanno mai studiato musica! \\
 La nostra conoscenza in merito è stata costruita nel periodo del progetto e come tale potrà contenere inesattezze di ogni sorta.
 
 \section{Dataset}
-Il dataset utilizzato è composto da 382 corali composti da Johann Sebastian Bach in formato testuale come mostrato in figura \ref{music-notation}.
-\begin{figure}[H]
-	\caption{Struttura musicale del corale 10}
-	\includegraphics{figures/music-notation.png}
-	\label{music-notation}
-\end{figure}
+Il dataset utilizzato è composto da 382 corali composti da Johann Sebastian Bach in formato testuale come mostrato nel Listing \ref{music-notation}.
+\lstinputlisting[label={music-notation},
+	caption={Struttura musicale del corale 10},
+	captionpos=b,
+	float,floatplacement=h,
+	language={}]
+	{listings/music-notation.txt}
 \noindent
 Dall'header estraiamo alcune informazioni importanti come:
 \begin{itemize}
@@ -45,21 +46,31 @@ Il dataset viene inizialmente suddiviso in corali in tonalità maggiore e corali
 Il dataset così definito è ovviamente impossibile da utilizzare per addestrare un HMM, è necessario, per ogni file, costruire una coppia [stato nascosto-stato visibile] che sia in grado di rappresentarne la struttura musicale. \\
 Questa operazione viene effettuata tramite lo script hmm-data.py, che legge i corali e costruisce l'input per il modello di Markov.
 In particolare gli stati visibili rappresentano le note relative al soprano, mentre gli stati nascosti rappresentano le corde e la loro relativa funzione armonica. \\
-Per ogni corale in ingresso viene prodotto un file con lo stesso nome contenente una serie di coppie di indici come mostrato in figura \ref{data-out}.
-\begin{figure}[H]
-	\centering
-	\caption{Esempio di file processato}
-	\includegraphics{figures/data-out.png}
-	\label{data-out}
-\end{figure}
+Per ogni corale in ingresso viene prodotto un file $f$ con lo stesso nome contenente una sequenza $S_f(h, v)$ di coppie di indici come mostrato nel Listing \ref{data-out},
+\lstinputlisting[label={data-out},
+	caption={Esempio di file processato},
+	captionpos=b,
+	float,floatplacement=h,
+	language={}]
+	{listings/data-out.txt}
 \noindent
-Queste coppie di indici fanno riferimento rispettivamente agli stati nascosti e a quelli visibili contenuti nei file "SYMBOLS\_HIDDEN" e "SYMBOLS\_VISIBLE".
-Come vediamo dalla figura \ref{hid-vis} (a) uno stato nascosto è nella forma a:b:c:0/Y, dove a rappresenta il numero di semitoni in più del soprano rispetto al basso, in maniera equivalente b e c rappresentano il numero di semitoni in più di contralto e tenore rispetto al basso. \\
-In figura \ref{hid-vis} (b) vediamo invece come gli stati visibili siano semplicemente le note della melodia del soprano.
-\begin{figure}[H]
-	\centering
-	\caption{(a) Inizio del file SYMBOLS\_HIDDEN, (b) Inizio del file SYMBOLS\_VISIBLE}
-	\includegraphics{figures/hid-vis.png}
-	\label{hid-vis}
-\end{figure}
+a cui fanno riferimento rispettivamente gli stati nascosti e gli stati visibili contenuti nei file "SYMBOLS\_HIDDEN" e "SYMBOLS\_VISIBLE".
+Come vediamo nel Listing \ref{hid-vis-a} (a) uno stato nascosto è nella forma a:b:c:0/Y, dove a rappresenta il numero di semitoni in più del soprano rispetto al basso, in maniera equivalente b e c rappresentano il numero di semitoni in più di contralto e tenore rispetto al basso. \\
+Nel Listing \ref{hid-vis-b} (b) vediamo invece come gli stati visibili siano semplicemente le note della melodia del soprano.
 
+\begin{center}
+\begin{minipage}[t]{.45\textwidth}
+	\lstinputlisting[label={hid-vis-a},
+		title={(a)},
+		language={}]
+		{listings/hid-vis-a.txt}
+\end{minipage}
+\hspace{.5cm}
+\begin{minipage}[t]{.45\textwidth}
+	\lstinputlisting[label={hid-vis-b},
+		title={(b)},
+		language={}]
+		{listings/hid-vis-b.txt}
+\end{minipage}
+\captionof{lstlisting}{(a) Inizio del file SYMBOLS\_HIDDEN (b) Inizio del file SYMBOLS\_VISIBLE}
+\end{center}
