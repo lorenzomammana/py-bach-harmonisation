@@ -54,6 +54,6 @@ Given a generic melody file which follows the same structure of those in custom/
 ```
 python custom-viterbi.py blue.txt
 python custom-output-expand.py blue.txt
-python chorale2midi.py custom/viterbi-results/blue.txt
+python chorale2midi.py custom/viterbi-results/blue.txt transpose
 ```
 
