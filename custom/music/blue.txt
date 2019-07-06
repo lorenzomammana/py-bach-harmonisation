@@ -7,19 +7,19 @@ Notentextausgabe in 16tel-Schritten:
 
 PHRASE	TAKT	SOPRAN	ALT	TENOR	BASS	HARMONIK
 
-1		B 1	A 1	E 1	A -1	T
+1		B 1				
 						
 		D 1				
 						
-	1	G 1	A 1	E 1	A 0	T
+	1	G 1				
 						
 		B 1				
 						
-		C 2	H 1	E 1	G#0	D3
+		C 2				
 						
 		F 1				
 						
-	2	A 1	A 1	E 1	A 0	T
+	2	A 1				
 						
 		B 1				
 						
@@ -27,27 +27,27 @@ PHRASE	TAKT	SOPRAN	ALT	TENOR	BASS	HARMONIK
 						
 		G 1				
 						
-	3	B 1	H 1	E 1	G#0	D3
+	3	B 1				
 						
 		D 2				
 						
-		D#2	A 1	E 1	A 0	T
+		D#2				
 						
 						
 						
-	4	D 2	A 1	E 1	A 0	T
+	4	D 2				
 						
 		C 2				
 						
-		B 1	H 1	E 1	G#0	D3
+		B 1				
 						
 						
 						
-	5	G 1	A 1	E 1	A 0	T
+	5	G 1				
 						
 		B 1				
 						
-		C 2	A 1	E 1	A 0	T
+		C 2				
 						
 		F 1				
 						
@@ -59,27 +59,27 @@ PHRASE	TAKT	SOPRAN	ALT	TENOR	BASS	HARMONIK
 						
 		G 1				
 						
-	7	B 1	H 1	E 1	G#0	D3
+	7	B 1				
 						
 		D 2				
 						
-		D#2	A 1	E 1	A 0	T
+		D#2				
 						
 						
 						
-	8	D 2	A 1	E 1	A 0	T
+	8	D 2				
 						
 		C 2				
 						
-		B 1	H 1	E 1	G#0	D3
+		B 1				
 						
 						
 						
-	9	G 1	A 1	E 1	A 0	T
+	9	G 1				
 						
 		B 1				
 						
-		C 2	A 1	E 1	A 0	T
+		C 2				
 						
 		F 1				
 						

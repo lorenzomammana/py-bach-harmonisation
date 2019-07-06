@@ -168,3 +168,5 @@ PHRASE	TAKT	SOPRAN	ALT	TENOR	BASS	HARMONIK
 								
 								
 								
+-10	4/4	D -5	F -6	A -7	D -7	24:15:7:0		
+								
