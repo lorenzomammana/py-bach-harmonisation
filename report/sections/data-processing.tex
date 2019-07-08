@@ -6,19 +6,18 @@ La nostra conoscenza in merito è stata costruita nel periodo del progetto e com
 
 \section{Dataset}
 Il dataset utilizzato è costituito da 382 corali composti da Johann Sebastian Bach in formato testuale come mostrato nel Listing \ref{music-notation}.
-\lstinputlisting[label={music-notation},
-	caption={Struttura musicale del corale 10},
-	captionpos=b,
-	float,floatplacement=h,
-	language={}]
-	{listings/music-notation.txt}
-\noindent
 Dall'header estraiamo alcune informazioni importanti come:
 \begin{itemize}
 \item Tonart: rappresenta la tonalità con cui è composto il corale (dur = Maggiore, moll = Minore)
 \item Takt: rappresenta la time signature del corale
 \item Tempo: rappresenta la velocità del corale
 \end{itemize}
+\lstinputlisting[label={music-notation},
+	caption={Struttura musicale del corale 10},
+	captionpos=b,
+	language={}]
+	{listings/music-notation.txt}
+\noindent
 In particolare la notazione utilizzata per descrivere la tonalità è quella utilizzata principalmente nelle zone di influenza germanica, la conversione ad un sistema a noi più familiare è immediata.
 \begin{table}[H]
 \centering
@@ -50,7 +49,6 @@ Per ogni corale in ingresso viene prodotto un file $f$ con lo stesso nome conten
 \lstinputlisting[label={data-out},
 	caption={Esempio di file processato},
 	captionpos=b,
-	float,floatplacement=h,
 	language={}]
 	{listings/data-out.txt}
 \noindent

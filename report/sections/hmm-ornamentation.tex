@@ -18,11 +18,12 @@ Il primo modello di Markov aggiunge una sola nota per battuta per le linee melod
 	\label{hid-vis-orn}
 \end{center}
 \noindent
-Ad esempio facendo riferimento all'ultima riga del Listato \ref{hid-vis-orn} vediamo che per una battuta in cui, nella battuta successiva, il contralto scende di 5 semitoni, il tenore scende di 2 semitoni e il basso scende di due semitoni andrà a generare le tre linee melodiche in cui la terza e la quarta nota sono rispettivamente abbassate di un semitono per contralto e tenore, ed alzate di due semitoni per il basso.
+Ad esempio facendo riferimento all'ultima riga del Listato \ref{hid-vis-orn} vediamo che per una battuta in cui, nella battuta successiva, il contralto scende di cinque semitoni, il tenore scende di due semitoni e il basso scende di un semitono andrà a generare le tre linee melodiche in cui la terza e la quarta nota sono rispettivamente abbassate di un semitono per contralto e tenore, ed alzate di due semitoni per il basso.
 \section{Training}
-Anche in questo caso prima del training viene effettuata una parte di preprocessing per ottenere gli stati visibili e nascosti, il training del modello viene eseguito esattamente come descritto nel capitolo precedente.
+Anche in questo caso prima del training viene effettuata una parte di preprocessing per ottenere gli stati visibili e nascosti, il training del modello viene eseguito esattamente come descritto nel capitolo precedente. \\
+Il modello relativo alla tonalità maggiore (ornamentation-dur) contiene 1284 stati nascosti e 1786 stati visibili, mentre quello relativo alla tonalità minore (ornamentation-moll) contiene 1393 stati nascosti e 1778 stati visibili.
 \section{Testing}
-Anche in questo caso si opera nella stessa identica maniera descritta precedentemente, i risultati in termini di accuratezza vengono mostrati in tabella.
+Si eseguono le stesse operazioni descritte nel capitolo precedente.
 \section{Ricostruzione dei risultati}
 Per ricostruire i risultati è stato necessario aggiungere uno script non presente nel repository originale in grado modificare il file musicale costruito dal modello di Markov precedente in accordo con la modifica di semitono delle linee melodiche.
 \section{Generazione del file MIDI}
